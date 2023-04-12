@@ -137,7 +137,7 @@ li:hover {
 	margin-bottom: 1em;
 }
 .gallery {
-	width: 80%;
+	width: 100%;
 	display: grid;
 	justify-content: center;
 	grid-template-columns: 1fr 1fr 1fr;
@@ -216,7 +216,61 @@ button:hover {
 .filtres {
 	display:flex;
 	justify-content: center;
-	gap:10px;
+	gap:15px;
 	padding-top:20px;
 	padding-bottom:50px;
+}
+
+.filtres button {
+	padding-top:7px;
+	padding-bottom:7px;
+	padding-left:5px;
+	padding-right:5px;
+}
+
+.login h2 {
+	display:flex;
+	justify-content: center;
+	padding-top:110px;
+	padding-bottom:45px;
+}
+
+.login label {
+	display:flex;
+	justify-content: flex-start;
+	margin-bottom:10px;
+}
+.login {
+	display:flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+}
+
+.login form {
+	display:flex;
+	flex-direction: column;
+}
+
+.login .data {
+	border: 0px solid #ffffff;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	background:#ffffff;
+	width:380px;
+	height:50px;
+	margin-bottom:30px;
+}
+
+.login label {
+	font-weight:500;
+	line-height: 16px;
+}
+
+.login .log {
+	width: 180px;
+	height:35px;
+	font-family: 'Syne';
+	border-width:0px;
+	margin-bottom:300px;
 }

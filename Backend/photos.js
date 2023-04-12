@@ -37,19 +37,33 @@ genererPhotos(photos);
 
 const reponseCategories = await fetch ('http://localhost:5678/api/categories');
 categories = await reponseCategories.json();
-//Boutons 
 
+const monSet = new Set(categories);
+monSet.add(null);
+console.log(monSet);
+
+//Boutons 
 const boutonTous = document.querySelector(".btn-tous");
 boutonTous.addEventListener("click", function() {
     document.querySelector(".gallery").innerHTML = "";
     genererPhotos(photos);
 });
 
-const boutonObj = document.querySelector(".btn-obj");
-boutonObj.addEventListener("click", function(){
-    const catObj = categories.filter(function (categories){
-        return categories.id === 1;
-    });
-    document.querySelector(".gallery").innerHTML = "";
-    genererPhotos(catObj);
-});
+for (let [id] of monSet.entries()){
+  const divFiltres = document.querySelector(".filtres");
+
+  const filtreElement = document.createElement("button");
+  filtreElement.innerText = `${id.name}`;
+
+  divFiltres.appendChild(filtreElement);
+
+}
+
+const btnObj = document.querySelector("button");
+  btnObj.addEventListener("click", function(){
+      document.querySelector(".gallery").innerHTML = "";
+  })
+
+
+
+

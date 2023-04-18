@@ -34,22 +34,15 @@ function genererPhotos(photos){
 
 genererPhotos(photos);
 
-
 const reponseCategories = await fetch ('http://localhost:5678/api/categories');
 categories = await reponseCategories.json();
 
-const monSet = new Set(categories);
-monSet.add(null);
-console.log(monSet);
+let monSet = categories;
+monSet = [{name:"Tous", id:0}, ...monSet];
 
 //Boutons 
-const boutonTous = document.querySelector(".btn-tous");
-boutonTous.addEventListener("click", function() {
-    document.querySelector(".gallery").innerHTML = "";
-    genererPhotos(photos);
-});
 
-for (let [id] of monSet.entries()){
+for (let id of monSet){
   const divFiltres = document.querySelector(".filtres");
 
   const filtreElement = document.createElement("button");
@@ -57,12 +50,51 @@ for (let [id] of monSet.entries()){
 
   divFiltres.appendChild(filtreElement);
 
+  filtreElement.addEventListener("click", function(){
+      document.querySelector(".gallery").innerHTML = "";
+      let obj;
+      if ( id.id === 0){
+        obj=photos;
+      }
+      else {
+        obj = photos.filter(e=>{return e.categoryId == id.id});
+      }
+      genererPhotos(obj);
+  })
 }
 
-const btnObj = document.querySelector("button");
-  btnObj.addEventListener("click", function(){
-      document.querySelector(".gallery").innerHTML = "";
-  })
+let user = {
+  email: 'email',
+  password: 'password'
+};
+
+async function submit() {
+  let response = await fetch ('http://localhost:5678/api/users/login', {
+
+    methode: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(user)
+  });
+
+  let result = await response.json();
+  alert(result.message);
+
+  if (response.userId === 1){
+    return "Bravo";
+  } else {
+    return "Erreur";
+  }
+}
+
+
+
+
+
+
+
+
 
 
 

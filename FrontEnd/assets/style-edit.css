@@ -140,7 +140,8 @@ li:hover {
 }
 #portfolio h2 {
 	text-align: center;
-	margin-bottom: 1em;
+	margin-bottom: 0em;
+    padding-right:20px;
 }
 .gallery {
 	width: 100%;
@@ -220,7 +221,7 @@ button:hover {
 }
 
 .filtres {
-	display:flex;
+	display:none;
 	justify-content: center;
 	gap:15px;
 	padding-top:20px;
@@ -329,9 +330,6 @@ header .edit {
 	justify-content: center;
 	align-items: center;
 	gap:10px;
-}
-
-.entete h2 {
-	margin:0;
-	padding-right:15px;
+    padding-bottom:80px;
+    margin-left:100px;
 }

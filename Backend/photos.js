@@ -63,30 +63,6 @@ for (let id of monSet){
   })
 }
 
-let user = {
-  email: 'email',
-  password: 'password'
-};
-
-async function submit() {
-  let response = await fetch ('http://localhost:5678/api/users/login', {
-
-    methode: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(user)
-  });
-
-  let result = await response.json();
-  alert(result.message);
-
-  if (response.userId === 1){
-    return "Bravo";
-  } else {
-    return "Erreur";
-  }
-}
 
 
 

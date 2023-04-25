@@ -89,7 +89,10 @@ function genererPhotosModal(photos){
       const photoElement = document.createElement("figure");
 
       let photoDelete = document.createElement("i");
-      photoDelete.className = "fa-solid fa-trash-can";
+      photoDelete.className = "fa-solid fa-trash-can js-delete";
+      photoDelete.addEventListener('click', function() {
+        
+      })
       
       const imageElement = document.createElement("img");
       imageElement.src = article.imageUrl;

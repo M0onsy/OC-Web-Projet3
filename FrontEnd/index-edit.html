@@ -12,13 +12,14 @@
 	<script type="module" src="/Backend/server.js"></script>
 	<script type="module" src="/Backend/app.js"></script>
 	<script type="module" src="/Backend/photos.js"></script>
+	<script type="module" src="/Backend/modal.js"></script>
 	<script src="https://kit.fontawesome.com/554c1c1eae.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <header>
     <div class="edit">
 		<i class="fa-solid fa-pen-to-square"></i>
-		<p>Mode edition</p>
+		<a href="#modal1" class="js-modal">Mode edition</a>
 		<button>publier les changements</button>
     </div>
 	<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
@@ -26,7 +27,8 @@
 		<ul>
 			<li>projets</li>
 			<li>contact</li>
-			<li>logout</li>
+			<li style="display:initial;">login</li>
+			<li style="display:none;">logout</li>
 			<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
 		</ul>
 	</nav>
@@ -44,15 +46,17 @@
 		</article>
 		<div class="modif">
 			<i class="fa-solid fa-pen-to-square"></i>
-			<p>modifier</p>
+			<a href="#modal1" class="js-modal">modifier</a>
 		</div>
 		
 	</section>
 	<section id="portfolio">
 		<div class="entete">
 			<h2>Mes projets</h2>
-			<i class="fa-solid fa-pen-to-square"></i>
-			<p>modifier</p>
+			<a href="#modal1" class="js-modal">
+				<i class="fa-solid fa-pen-to-square"></i>
+				modifier
+			</a>
 		</div>
 		
 		<div class="filtres">
@@ -62,6 +66,17 @@
 			
 		</div>
 	</section>
+
+	<section id="modal1" class="modal" aria-hidden="true" style="display:none;">
+		<div class="modal-wrapper js-stop-modal">
+			<i class="fa-solid fa-xmark js-close-modal"></i>
+			<p>Galerie photo</p>
+			<div class="galleryModal">
+
+			</div>
+		</div>
+	</section>
+
 	<section id="contact">
 		<h2>Contact</h2>
 		<p>Vous avez un projet ? Discutons-en !</p>

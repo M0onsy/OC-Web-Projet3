@@ -3,6 +3,10 @@
    License: none (public domain)
 */
 
+* { 
+	box-sizing: border-box;
+}
+
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -154,8 +158,8 @@ li:hover {
 
 .gallery img {
 	width: 100%;
-
 }
+
 #contact {
 	width: 50%;
 margin: auto;
@@ -313,7 +317,7 @@ header .edit {
 	color:black;
 }
 
-.edit p {
+.edit a {
 	color:white;
 }
 
@@ -326,10 +330,81 @@ header .edit {
 }
 
 .entete {
-	display:flex ;
+	display: flex;
 	justify-content: center;
 	align-items: center;
 	gap:10px;
     padding-bottom:80px;
     margin-left:100px;
+}
+
+.modal {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width:100%;
+	height:100%;
+	background: rgba(0, 0, 0, 0.3);
+}
+
+.modal-wrapper {
+	display: flex;
+	flex-wrap: wrap;
+	width:650px;
+	height: 750px;
+	background-color: #ffffff;
+}
+
+/* Exemple de style pour les éléments :focus */
+
+*:focus {
+	box-shadow: 0 0 10px blue;
+}
+
+.galleryModal{
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap:10px;
+	padding-left:100px;
+	padding-right:100px;
+}
+.galleryModal img {
+	width: 80px;
+	height: 110px;
+}
+
+.modal-wrapper .fa-xmark {
+	display:flex;
+	justify-content: flex-end;
+	width:100%;
+	padding-right:10px;
+	padding-top:10px;
+}
+
+.modal-wrapper p {
+	display:flex;
+	justify-content: center;
+	width:100%;
+	font-size: 26px;
+}
+
+.modal-wrapper figure {
+	display:flex;
+	flex-direction: column;
+}
+.modal-wrapper .fa-trash-can {
+	width:21px;
+	position:relative;
+	top:30px;
+	left:55px;
+	padding: 3px;
+	border-radius:4px;
+	border: 1px solid black;
+	background-color: black;
+	color:white;
 }

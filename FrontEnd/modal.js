@@ -69,8 +69,8 @@ let photos = window.localStorage.getItem("photos");
 let categories = window.localStorage.getItem("categories");
 if (photos === null ) {
 
-const reponsePhotos = await fetch ('http://localhost:5678/api/works');
-photos = await reponsePhotos.json();
+const reponsePhotos = fetch ('http://localhost:5678/api/works');
+photos = reponsePhotos.json();
 
 const valeurPhotos = JSON.stringify(photos);
 

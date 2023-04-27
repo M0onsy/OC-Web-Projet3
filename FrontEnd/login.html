@@ -8,7 +8,7 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="./assets/style.css">
+	<link rel="stylesheet" href="./assets/style-edit.css">
 </head>
 <body>
     <header>
@@ -26,11 +26,12 @@
 		<form action="http://localhost:5678/api/users/login" method="POST">
 			<h2>Log In</h2>
 
-			<label>E-mail</label>
+			<label class="email">E-mail</label>
 			<input id="email" class="data" type="email" placeholder="" name="email" required>
 
-			<label>Mot de passe</label>
+			<label class="mdp">Mot de passe</label>
 			<input id="password" class="data" type="password" placeholder="" name="password" required>
+			<div id="errorActive" class="errorActive"></div>
 
 			<input class="log" type="submit" id="submit" value="Se connecter" formnovalidate>
 

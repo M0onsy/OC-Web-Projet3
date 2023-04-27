@@ -233,17 +233,10 @@ button:hover {
 }
 
 .login {
-	display:flex;
-	flex-direction: column;
-	flex-wrap: wrap;
-	justify-content: center;
-	align-items: center;
 	color:#3d3d3d;
 }
 
 .login h2 {
-	display:flex;
-	justify-content: center;
 	padding-top:110px;
 	padding-bottom:45px;
 }
@@ -251,6 +244,8 @@ button:hover {
 .login form {
 	display:flex;
 	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 
 .login .data {
@@ -263,11 +258,19 @@ button:hover {
 }
 
 .login label {
-	display:flex;
-	justify-content: flex-start;
 	margin-bottom:10px;
 	font-weight:500;
 	line-height: 16px;
+}
+
+.email {
+	position: relative;
+	right:168px;
+}
+
+.mdp {
+	position: relative;
+	right:144px;
 }
 
 .login .log {
@@ -283,6 +286,13 @@ button:hover {
 	align-items: center;
 	text-decoration:underline;
 	color:#3D3D3D;
+}
+
+.errorActive {
+	display:flex;
+	justify-content: center;
+	align-items: center;
+	color: red;
 }
 
 header .edit {

@@ -23,14 +23,18 @@ async function genererPhotos(photos){
 }
 genererPhotos(photos);
 
-async function getCategories() {
+async function getCategories(categories) {
   const reponseCategories = await fetch ('http://localhost:5678/api/categories');
   categories = await reponseCategories.json();
+
+  let monSet = categories;
+  monSet = [{name:"Tous", id:0}, ...monSet];
 }
-getCategories();
+getCategories(categories);
 
 let monSet = categories;
 monSet = [{name:"Tous", id:0}, ...monSet];
+
 //Boutons 
 
 for (let id of Object.entries(monSet)){

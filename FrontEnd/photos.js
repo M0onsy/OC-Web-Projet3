@@ -1,3 +1,10 @@
+let authentification = sessionStorage.getItem(authToken);
+const logged = document.getElementById('edit');
+if (authToken !== null) {
+  logged.style.display = "initial";
+}
+
+
 async function genererPhotos(photos){
 
   const reponsePhotos = await fetch ('http://localhost:5678/api/works');
@@ -37,7 +44,7 @@ monSet = [{name:"Tous", id:0}, ...monSet];
 
 //Boutons 
 
-for (let id of Object.entries(monSet)){
+for (let id in monSet){
   const divFiltres = document.querySelector(".filtres");
 
   const filtreElement = document.createElement("button");
@@ -57,6 +64,8 @@ for (let id of Object.entries(monSet)){
       genererPhotos(obj);
   })
 }
+
+
 
 
 

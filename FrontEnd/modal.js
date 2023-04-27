@@ -107,5 +107,4 @@ function genererPhotosModal(photos){
       photoElement.appendChild(textElement);
     }
   }
-  
   genererPhotosModal(photos);

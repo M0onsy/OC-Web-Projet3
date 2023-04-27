@@ -15,13 +15,10 @@ async function submit() {
   })
 
   let result = await response.json()
-  
-  let authToken = result.token.value;
-
-  console.log(authToken)
+  sessionStorage.setItem('authToken', result.token)
 
   if (response.status === 200) {
-    //window.location.href = "index-edit.html";
+    window.location.href = "index.html";
   } else if (response.status !== 200) {
     const error = document.getElementById('errorActive');
     error.innerHTML = "Une erreur est survenue, veuillez vérifier votre mail et/ou votre mot de passe";

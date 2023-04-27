@@ -9,15 +9,22 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="./assets/style.css">
+	<script src="https://kit.fontawesome.com/554c1c1eae.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <header>
+    <div id="edit" class="edit" style="display:none;">
+		<i class="fa-solid fa-pen-to-square"></i>
+		<a href="#modal1" class="js-modal">Mode edition</a>
+		<button>publier les changements</button>
+    </div>
 	<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
 	<nav>
 		<ul>
 			<li>projets</li>
 			<li>contact</li>
-			<a href="login.html"><li>login</li></a>
+			<a href="login.html"><li style="display:initial;">login</li></a>
+			<li style="display:none;">logout</li>
 			<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
 		</ul>
 	</nav>
@@ -33,9 +40,23 @@
 			<p>Chaque projet sera étudié en commun, de façon à mettre en valeur les volumes, les matières et les couleurs dans le respect de l’esprit des lieux et le choix adapté des matériaux. Le suivi du chantier sera assuré dans le souci du détail, le respect du planning et du budget.</p>
 			<p>En cas de besoin, une équipe pluridisciplinaire peut-être constituée : architecte DPLG, décorateur(trice)</p>
 		</article>
+		<div class="modif">
+			<a href="#modal1" id="edit" class="js-modal" style="display:none;">
+				<i class="fa-solid fa-pen-to-square"></i>
+				modifier
+			</a>
+		</div>
+		
 	</section>
 	<section id="portfolio">
-		<h2>Mes projets</h2>
+		<div class="entete">
+			<h2>Mes projets</h2>
+			<a href="#modal1" id="edit" class="js-modal" style="display:none;">
+				<i class="fa-solid fa-pen-to-square"></i>
+				modifier
+			</a>
+		</div>
+		
 		<div class="filtres">
 			
 		</div>
@@ -43,6 +64,17 @@
 			
 		</div>
 	</section>
+
+	<section id="modal1" class="modal" aria-hidden="true" style="display:none;">
+		<div class="modal-wrapper js-stop-modal">
+			<i class="fa-solid fa-xmark js-close-modal"></i>
+			<p>Galerie photo</p>
+			<div class="galleryModal">
+
+			</div>
+		</div>
+	</section>
+
 	<section id="contact">
 		<h2>Contact</h2>
 		<p>Vous avez un projet ? Discutons-en !</p>
@@ -65,8 +97,8 @@
 		</ul>
 	</nav>
 </footer>
-<script type="module" src="/Backend/server.js"></script>
-<script type="module" src="/Backend/app.js"></script>
-<script src="/Frontend/photos.js"></script>
+<script src="/modal.js"></script>
+<script src="/photos.js"></script>
+<script src="/login.js"></script>
 </body>
 </html>

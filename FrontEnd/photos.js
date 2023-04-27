@@ -1,7 +1,12 @@
-let authentification = sessionStorage.getItem(authToken);
-const logged = document.getElementById('edit');
+let authToken = sessionStorage.getItem('authToken');
+
+const logged1 = document.getElementById('edit1');
+const logged2 = document.getElementById('edit2');
+const logged3 = document.getElementById('edit3');
 if (authToken !== null) {
-  logged.style.display = "initial";
+  logged1.style.display = "flex";
+  logged2.style.display = "flex";
+  logged3.style.display = "flex";
 }
 
 
@@ -31,16 +36,15 @@ async function genererPhotos(photos){
 genererPhotos(photos);
 
 async function getCategories(categories) {
+
   const reponseCategories = await fetch ('http://localhost:5678/api/categories');
   categories = await reponseCategories.json();
 
   let monSet = categories;
   monSet = [{name:"Tous", id:0}, ...monSet];
 }
-getCategories(categories);
 
-let monSet = categories;
-monSet = [{name:"Tous", id:0}, ...monSet];
+
 
 //Boutons 
 

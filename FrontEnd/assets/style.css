@@ -225,7 +225,7 @@ button:hover {
 }
 
 .filtres {
-	display:none;
+	display:flex;
 	justify-content: center;
 	gap:15px;
 	padding-top:20px;

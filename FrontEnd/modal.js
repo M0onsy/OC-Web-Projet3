@@ -1,44 +1,50 @@
 //Gestion modal
-let modal = null
-/* const focusableSelector = 'i'
-let focusables = [] 
-let previouslyFocusedElement = null*/
+// Déclaration des variables
+const focusableSelector = 'i';
+const modalElements = document.querySelectorAll('.js-modal');
+let focusables = [];
+let previouslyFocusedElement;
+let modalElement;
 
-const openModal = function (e) {
-  e.preventDefault()
-  modal = document.querySelector(e.target.getAttribute('href'))
-  //focusables = Array.from(modal.querySelectorAll(focusableSelector))
-  //previouslyFocusedElement = document.querySelector(':focus')
-  modal.style.display = null
-  //focusables[0].focus() 
-  modal.removeAttribute('aria-hidden')
-  modal.setAttribute('aria-modal', 'true')
-  modal.addEventListener('click', closeModal)
-  modal.querySelector('.js-close-modal').addEventListener('click', closeModal)
-  modal.querySelector('.js-stop-modal').addEventListener('click', stopPropagation)
-}
+// Fonction pour ouvrir la modal
+const openModal = (e) => {
+  e.preventDefault();
+  modalElement = document.querySelector(e.target.getAttribute('href'));
+  focusables = [...modalElement.querySelectorAll(focusableSelector)];
+  previouslyFocusedElement = document.querySelector(':focus');
+  modalElement.style.display = null;
+  focusables[0].focus(); 
+  modalElement.removeAttribute('aria-hidden');
+  modalElement.setAttribute('aria-modal', 'true');
+  modalElement.addEventListener('click', closeModal);
+  modalElement.querySelector('.js-close-modal').addEventListener('click', closeModal);
+  modalElement.querySelector('.js-stop-modal').addEventListener('click', stopPropagation);
+};
 
-const closeModal = function (e) {
-  if(modal === null) return
-  //if (previouslyFocusedElement !== null) previouslyFocusedElement.focus()
-  e.preventDefault()
-  modal.style.display = "none"
-  modal.setAttribute('aria-hidden', 'true')
-  modal.removeAttribute('aria-modal')
-  modal.removeEventListener('click', closeModal)
-  modal.querySelector('.js-close-modal').removeEventListener('click', closeModal)
-  modal.querySelector('.js-stop-modal').removeEventListener('click', stopPropagation)
-  modal = null
-}
+// Fonction pour fermer la modal
+const closeModal = (e) => {
+  if (modalElement === null) return;
+  if (previouslyFocusedElement !== null) previouslyFocusedElement.focus();
+  e.preventDefault();
+  modalElement.style.display = 'none';
+  modalElement.setAttribute('aria-hidden', 'true');
+  modalElement.removeAttribute('aria-modal');
+  modalElement.removeEventListener('click', closeModal);
+  modalElement.querySelector('.js-close-modal').removeEventListener('click', closeModal);
+  modalElement.querySelector('.js-stop-modal').removeEventListener('click', stopPropagation);
+  modalElement = null;
+};
 
-const stopPropagation = function (e) {
-    e.stopPropagation()
-}
+// Fonction pour empêcher la propagation de l'événement
+const stopPropagation = (e) => {
+  e.stopPropagation();
+};
 
-/* const focusInModal = function(e) {
-    e.preventDefault()
-    let index = focusables.findIndex(modal.querySelector(':focus'))
-    if (e.shiftKey === true) {
+// Fonction pour changer le focus dans la modal
+const focusInModal = (e) => {
+  e.preventDefault();
+  let index = focusables.findIndex(modalElement.querySelector(':focus'));
+  if (e.shiftKey === true) {
         index--
     } else {
         index++
@@ -50,61 +56,159 @@ const stopPropagation = function (e) {
         index = focusable.length - 1
     }
     focusables[index].focus()
-} */
+} 
 
 document.querySelectorAll('.js-modal').forEach(a => {
   a.addEventListener('click', openModal);
-})
+});
 
 window.addEventListener('keydown', function(e) {
-    if(e.key === "Escape" || e.key === "Esc") {
-        closeModal(e)
-    }
-    /* if (e.key === "Tab" && modal !== null) {
-        focusInModal(e)
-    } */
-})
+  if (e.key === "Escape" || e.key === "Esc") {
+    closeModal(e)
+  }
+  if (e.key === "Tab" && modal !== null) {
+    focusInModal(e)
+  }
+});
 
 let photos = window.localStorage.getItem("photos");
 let categories = window.localStorage.getItem("categories");
-if (photos === null ) {
 
-const reponsePhotos = fetch ('http://localhost:5678/api/works');
-photos = reponsePhotos.json();
-
-const valeurPhotos = JSON.stringify(photos);
-
-window.localStorage.setItem("photos", valeurPhotos);
-}else{
+if (photos === null) {
+  fetch('http://localhost:5678/api/works')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      photos = data;
+      const valeurPhotos = JSON.stringify(photos);
+      window.localStorage.setItem("photos", valeurPhotos);
+      genererPhotosModal(photos);
+    })
+    .catch(error => {
+      console.error('Error fetching photos:', error);
+    });
+} else {
   photos = JSON.parse(photos);
+  genererPhotosModal(photos);
 }
 
-function genererPhotosModal(photos){
-    for (let i = 0; i < photos.length; i++) {
-  
-      const article = photos[i];
-  
-      const divGallery = document.querySelector(".galleryModal");
-  
-      const photoElement = document.createElement("figure");
+function genererPhotosModal(photos) {
+  const divGallery = document.querySelector(".galleryModal");
+  divGallery.innerHTML = ''; 
+  for (let i = 0; i < photos.length; i++) {
 
-      let photoDelete = document.createElement("i");
-      photoDelete.className = "fa-solid fa-trash-can js-delete";
-      photoDelete.addEventListener('click', function() {
-        
-      })
-      
-      const imageElement = document.createElement("img");
-      imageElement.src = article.imageUrl;
+    const article = photos[i];
 
-      const textElement = document.createElement("figcaption");
-      textElement.innerText = `éditer`;
-  
-      divGallery.appendChild(photoElement);
-      
-      photoElement.appendChild(photoDelete);
-      photoElement.appendChild(imageElement);
-      photoElement.appendChild(textElement);
-    }
+    const photoElement = document.createElement("figure");
+
+    let photoDelete = document.createElement("i");
+    photoDelete.className = "fa-solid fa-trash-can js-delete";
+    photoDelete.addEventListener('click', function() {
+      const id = article.id; 
+      deletePhoto(id); 
+    });
+
+    const imageElement = document.createElement("img");
+    imageElement.src = article.imageUrl;
+
+    const textElement = document.createElement("figcaption");
+    textElement.innerText = `éditer`;
+
+    photoElement.setAttribute('data-id', article.id);
+
+    divGallery.appendChild(photoElement);
+
+    photoElement.appendChild(photoDelete);
+    photoElement.appendChild(imageElement);
+    photoElement.appendChild(textElement);
   }
-  genererPhotosModal(photos);
+}
+
+//Fonction de suppresion
+function deletePhoto(id) {
+  fetch(`http://localhost:5678/api/works/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    const photoElement = document.querySelector(`[data-id="${id}"]`); 
+    if (photoElement) {
+      photoElement.remove(); 
+    }
+  })
+  .catch(error => {
+    console.error('Error deleting photo:', error);
+  });
+}
+
+// Récupérer le bouton "Supprimer"
+const deleteButton = modalElement.querySelector('.js-delete');
+
+// Vérifier que l'élément existe
+if (deleteButton) {
+  // Ajouter un gestionnaire d'événements pour le bouton "Supprimer"
+  deleteButton.addEventListener('click', () => {
+    const fileId = modalElement.getAttribute('data-file-id');
+    if (confirm(`Êtes-vous sûr de vouloir supprimer le fichier ${fileId} ?`)) {
+      supprimerPhoto(fileId);
+      closeModal();
+    }
+  });
+}
+
+// Fonction pour ajouter un fichier
+const addFile = (data) => {
+  fetch('http://localhost:5678/api/files', {
+    method: 'POST',
+    body: data
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Afficher un message de confirmation d'ajout
+      console.log(`Le fichier ${data.id} a été ajouté`);
+    })
+    .catch(error => {
+      console.error('Error adding file:', error);
+    });
+};
+
+// Ajouter un gestionnaire d'événements pour le bouton "Ajouter"
+modalElement.querySelector('.js-add-file').addEventListener('click', () => {
+  const fileInput = modalElement.querySelector('.js-file-input');
+  const file = fileInput.files[0];
+  if (file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    addFile(formData);
+    closeModal();
+  }
+});
+
+// Ajouter le bouton "Ajouter" à votre modal
+const addButton = document.createElement('button');
+addButton.classList.add('js-add-file');
+addButton.textContent = 'Ajouter';
+modalElement.appendChild(addButton);
+
+// Ajouter un champ d'entrée de fichier à votre modal
+const fileInput = document.createElement('input');
+fileInput.type = 'file';
+fileInput.classList.add('js-file-input');
+modalElement.appendChild(fileInput);

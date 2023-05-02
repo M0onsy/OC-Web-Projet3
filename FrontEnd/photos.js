@@ -1,85 +1,78 @@
-let authToken = sessionStorage.getItem('authToken');
+async function main() {
+  let authToken = sessionStorage.getItem('authToken');
+  const filtersContainer = document.querySelector(".filtres");
+  const galleryContainer = document.querySelector(".gallery");
 
-const logged1 = document.getElementById('edit1');
-const logged2 = document.getElementById('edit2');
-const logged3 = document.getElementById('edit3');
-if (authToken !== null) {
-  logged1.style.display = "flex";
-  logged2.style.display = "flex";
-  logged3.style.display = "flex";
-}
+  const logged1 = document.getElementById('edit1');
+  const logged2 = document.getElementById('edit2');
+  const logged3 = document.getElementById('edit3');
+  const hideFilters = document.getElementById('filtres')
+  if (authToken !== null) {
+    logged1.style.display = "flex";
+    logged2.style.display = "flex";
+    logged3.style.display = "flex";
+    hideFilters.style.display = "none;"
+  }
 
 
-async function genererPhotos(photos){
+  async function genererPhotos(photos, categoryId){
+    const reponsePhotos = await fetch ('http://localhost:5678/api/works');
+    const articles = await reponsePhotos.json();
+  
+    // Supprimer toutes les photos existantes dans la galerie
+    galleryContainer.innerHTML = '';
+  
+    for (const article of articles) {
+      // Ajouter la photo à la galerie uniquement si elle appartient à la catégorie sélectionnée
+      if (categoryId === 0 || article.categoryId === categoryId) {
+        const imageElement = document.createElement("img");
+        imageElement.src = article.imageUrl;
+        const textElement = document.createElement("figcaption");
+        textElement.innerText = `${article.title}`;
+    
+        const photoElement = document.createElement("figure");
+        photoElement.appendChild(imageElement);
+        photoElement.appendChild(textElement);
+    
+        galleryContainer.appendChild(photoElement);
+    
+        // Ajouter chaque photo au tableau "photos"
+        photos.push({
+          url: article.imageUrl,
+          categoryId: article.categoryId
+        });
+      }
+    }
+  }
+  
+  let photos = [];
+  await genererPhotos(photos, 0);
 
-  const reponsePhotos = await fetch ('http://localhost:5678/api/works');
-  photos = await reponsePhotos.json();
+  async function getCategories() {
+    const reponseCategories = await fetch ('http://localhost:5678/api/categories');
+    const categories = await reponseCategories.json();
+    return categories;
+  }
 
-  for (let i = 0; i < photos.length; i++) {
+  let categories = await getCategories();
+  const monSet = [{name:"Tous", id:0}, ...categories];
+  console.log(monSet)
 
-    const article = photos[i];
-
-    const divGallery = document.querySelector(".gallery");
-
-    const photoElement = document.createElement("figure");
-
-    const imageElement = document.createElement("img");
-    imageElement.src = article.imageUrl;
-    const textElement = document.createElement("figcaption");
-    textElement.innerText = `${article.title}`;
-
-    divGallery.appendChild(photoElement);
-    photoElement.appendChild(imageElement);
-    photoElement.appendChild(textElement);
+  // Boutons de filtre
+  for (const category of monSet) {
+    const filterButton = document.createElement("button");
+    filterButton.innerText = category.name;
+  
+    filtersContainer.appendChild(filterButton);
+  
+    filterButton.addEventListener("click", function () {
+      // Récupérer les photos filtrées
+      const filteredPhotos = photos.filter(photo => category.id === 0 || photo.categoryId === category.id);
+  
+      // Générer la galerie avec les photos filtrées
+      genererPhotos(filteredPhotos, category.id);
+    });
   }
 }
-genererPhotos(photos);
 
-async function getCategories(categories) {
-
-  const reponseCategories = await fetch ('http://localhost:5678/api/categories');
-  categories = await reponseCategories.json();
-
-  let monSet = categories;
-  monSet = [{name:"Tous", id:0}, ...monSet];
-}
-
-
-
-//Boutons 
-
-for (let id in monSet){
-  const divFiltres = document.querySelector(".filtres");
-
-  const filtreElement = document.createElement("button");
-  filtreElement.innerText = `${id.name}`;
-
-  divFiltres.appendChild(filtreElement);
-
-  filtreElement.addEventListener("click", function(){
-      document.querySelector(".gallery").innerHTML = "";
-      let obj;
-      if ( id.id === 0){
-        obj=photos;
-      }
-      else {
-        obj = photos.filter(e=>{return e.categoryId == id.id});
-      }
-      genererPhotos(obj);
-  })
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+main();

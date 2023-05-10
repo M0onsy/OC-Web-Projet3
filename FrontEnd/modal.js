@@ -1,5 +1,6 @@
 //Gestion modal
 // Déclaration des variables
+let authToken = sessionStorage.getItem('authToken');
 const focusableSelector = 'i';
 const modalElements = document.querySelectorAll('.js-modal');
 let focusables = [];
@@ -16,8 +17,8 @@ const openModal = (e) => {
   focusables[0].focus(); 
   modalElement.removeAttribute('aria-hidden');
   modalElement.setAttribute('aria-modal', 'true');
-  modalElement.addEventListener('click', closeModal);
-  modalElement.querySelector('.js-close-modal').addEventListener('click', closeModal);
+  //modalElement.addEventListener('click', closeModal);
+  //modalElement.querySelector('.js-close-modal').addEventListener('click', closeModal);
   modalElement.querySelector('.js-stop-modal').addEventListener('click', stopPropagation);
 };
 
@@ -29,8 +30,8 @@ const closeModal = (e) => {
   modalElement.style.display = 'none';
   modalElement.setAttribute('aria-hidden', 'true');
   modalElement.removeAttribute('aria-modal');
-  modalElement.removeEventListener('click', closeModal);
-  modalElement.querySelector('.js-close-modal').removeEventListener('click', closeModal);
+  //modalElement.removeEventListener('click', closeModal);
+  //modalElement.querySelector('.js-close-modal').removeEventListener('click', closeModal);
   modalElement.querySelector('.js-stop-modal').removeEventListener('click', stopPropagation);
   modalElement = null;
 };
@@ -96,12 +97,12 @@ if (photos === null) {
   genererPhotosModal(photos);
 }
 
-function genererPhotosModal(photos) {
+async function genererPhotosModal(photos) {
   const divGallery = document.querySelector(".galleryModal");
   divGallery.innerHTML = ''; 
-  for (let i = 0; i < photos.length; i++) {
+  for await (let photo of photos) {
 
-    const article = photos[i];
+    const article = photo;
 
     const photoElement = document.createElement("figure");
 
@@ -109,7 +110,9 @@ function genererPhotosModal(photos) {
     photoDelete.className = "fa-solid fa-trash-can js-delete";
     photoDelete.addEventListener('click', function() {
       const id = article.id; 
-      deletePhoto(id); 
+      if (confirm(`Êtes-vous sûr de vouloir supprimer le fichier ${id} ?`)) {
+        deletePhoto(id);
+      }
     });
 
     const imageElement = document.createElement("img");
@@ -125,7 +128,7 @@ function genererPhotosModal(photos) {
     photoElement.appendChild(photoDelete);
     photoElement.appendChild(imageElement);
     photoElement.appendChild(textElement);
-  }
+}
 }
 
 //Fonction de suppresion
@@ -133,14 +136,15 @@ function deletePhoto(id) {
   fetch(`http://localhost:5678/api/works/${id}`, {
     method: 'DELETE',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
     }
   })
   .then(response => {
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-    return response.json();
+    return true;
   })
   .then(data => {
     const photoElement = document.querySelector(`[data-id="${id}"]`); 
@@ -149,29 +153,19 @@ function deletePhoto(id) {
     }
   })
   .catch(error => {
-    console.error('Error deleting photo:', error);
+    console.log('Error deleting photo:', error);
   });
 }
 
-// Récupérer le bouton "Supprimer"
-const deleteButton = modalElement.querySelector('.js-delete');
 
-// Vérifier que l'élément existe
-if (deleteButton) {
-  // Ajouter un gestionnaire d'événements pour le bouton "Supprimer"
-  deleteButton.addEventListener('click', () => {
-    const fileId = modalElement.getAttribute('data-file-id');
-    if (confirm(`Êtes-vous sûr de vouloir supprimer le fichier ${fileId} ?`)) {
-      supprimerPhoto(fileId);
-      closeModal();
-    }
-  });
-}
-
-// Fonction pour ajouter un fichier
+//Fonction pour ajouter un fichier
 const addFile = (data) => {
   fetch('http://localhost:5678/api/files', {
     method: 'POST',
+    headers: {
+      'Content-Type': '',
+      'Authorization': `Bearer ${authToken}`
+    },
     body: data
   })
     .then(response => {

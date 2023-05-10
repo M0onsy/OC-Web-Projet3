@@ -17,8 +17,8 @@ const openModal = (e) => {
   focusables[0].focus(); 
   modalElement.removeAttribute('aria-hidden');
   modalElement.setAttribute('aria-modal', 'true');
-  //modalElement.addEventListener('click', closeModal);
-  //modalElement.querySelector('.js-close-modal').addEventListener('click', closeModal);
+  modalElement.addEventListener('click', closeModal);
+  modalElement.querySelector('.js-close-modal').addEventListener('click', closeModal);
   modalElement.querySelector('.js-stop-modal').addEventListener('click', stopPropagation);
 };
 
@@ -30,8 +30,8 @@ const closeModal = (e) => {
   modalElement.style.display = 'none';
   modalElement.setAttribute('aria-hidden', 'true');
   modalElement.removeAttribute('aria-modal');
-  //modalElement.removeEventListener('click', closeModal);
-  //modalElement.querySelector('.js-close-modal').removeEventListener('click', closeModal);
+  modalElement.removeEventListener('click', closeModal);
+  modalElement.querySelector('.js-close-modal').removeEventListener('click', closeModal);
   modalElement.querySelector('.js-stop-modal').removeEventListener('click', stopPropagation);
   modalElement = null;
 };

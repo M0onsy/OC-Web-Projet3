@@ -3,15 +3,22 @@ async function main() {
   const filtersContainer = document.querySelector(".filtres");
   const galleryContainer = document.querySelector(".gallery");
 
+  const logged0 = document.getElementById('edit0');
   const logged1 = document.getElementById('edit1');
   const logged2 = document.getElementById('edit2');
   const logged3 = document.getElementById('edit3');
-  const hideFilters = document.getElementById('filtres')
+  const hideFilters = document.getElementById('filtres');
+  const logout = document.getElementById('logout');
+  const login = document.getElementById('login');
   if (authToken !== null) {
+    logged0.style.paddingTop = "0";
     logged1.style.display = "flex";
     logged2.style.display = "flex";
     logged3.style.display = "flex";
     hideFilters.style.display = "none;"
+    logout.style.display = "initial";
+    login.style.display = "none";
+
   }
 
 

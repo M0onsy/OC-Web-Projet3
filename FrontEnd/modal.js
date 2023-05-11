@@ -6,27 +6,40 @@ const modalElements = document.querySelectorAll('.js-modal');
 let focusables = [];
 let previouslyFocusedElement;
 let modalElement;
+let isAddingFile = false;
+
+let titleInput;
+let fileInput;
+let addButton;
 
 // Fonction pour ouvrir la modal
 const openModal = (e) => {
   e.preventDefault();
   modalElement = document.querySelector(e.target.getAttribute('href'));
-  focusables = [...modalElement.querySelectorAll(focusableSelector)];
+  focusables = Array.from(modalElement.querySelectorAll(focusableSelector));
   previouslyFocusedElement = document.querySelector(':focus');
-  modalElement.style.display = null;
-  focusables[0].focus(); 
-  modalElement.removeAttribute('aria-hidden');
-  modalElement.setAttribute('aria-modal', 'true');
-  modalElement.addEventListener('click', closeModal);
-  modalElement.querySelector('.js-close-modal').addEventListener('click', closeModal);
-  modalElement.querySelector('.js-stop-modal').addEventListener('click', stopPropagation);
+
+  if (modalElement.classList.contains('js-add')) {
+    showAddPhotoInterface();
+  } else {
+    modalElement.style.display = null;
+    focusables[0].focus();
+    modalElement.removeAttribute('aria-hidden');
+    modalElement.setAttribute('aria-modal', 'true');
+    modalElement.addEventListener('click', closeModal);
+    modalElement.querySelector('.js-close-modal').addEventListener('click', closeModal);
+    modalElement.querySelector('.js-stop-modal').addEventListener('click', stopPropagation);
+  }
 };
+
 
 // Fonction pour fermer la modal
 const closeModal = (e) => {
   if (modalElement === null) return;
   if (previouslyFocusedElement !== null) previouslyFocusedElement.focus();
-  e.preventDefault();
+  if (e && e.preventDefault) {
+    e.preventDefault();
+  }
   modalElement.style.display = 'none';
   modalElement.setAttribute('aria-hidden', 'true');
   modalElement.removeAttribute('aria-modal');
@@ -34,6 +47,8 @@ const closeModal = (e) => {
   modalElement.querySelector('.js-close-modal').removeEventListener('click', closeModal);
   modalElement.querySelector('.js-stop-modal').removeEventListener('click', stopPropagation);
   modalElement = null;
+  modalElement = document.getElementById('modal1');
+  modalElement.style.display = 'none';
 };
 
 // Fonction pour empêcher la propagation de l'événement
@@ -44,72 +59,35 @@ const stopPropagation = (e) => {
 // Fonction pour changer le focus dans la modal
 const focusInModal = (e) => {
   e.preventDefault();
-  let index = focusables.findIndex(modalElement.querySelector(':focus'));
+  let index = focusables.findIndex(element => element === modalElement.querySelector(':focus'));
   if (e.shiftKey === true) {
-        index--
-    } else {
-        index++
-    }
-    if (index >= focusables.length) {
-        index = 0
-    }
-    if (index < 0) {
-        index = focusable.length - 1
-    }
-    focusables[index].focus()
-} 
-
-document.querySelectorAll('.js-modal').forEach(a => {
-  a.addEventListener('click', openModal);
-});
-
-window.addEventListener('keydown', function(e) {
-  if (e.key === "Escape" || e.key === "Esc") {
-    closeModal(e)
+    index--;
+  } else {
+    index++;
   }
-  if (e.key === "Tab" && modal !== null) {
-    focusInModal(e)
+  if (index >= focusables.length) {
+    index = 0;
   }
-});
+  if (index < 0) {
+    index = focusables.length - 1;
+  }
+  focusables[index].focus();
+};
 
-let photos = window.localStorage.getItem("photos");
-let categories = window.localStorage.getItem("categories");
-
-if (photos === null) {
-  fetch('http://localhost:5678/api/works')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-    .then(data => {
-      photos = data;
-      const valeurPhotos = JSON.stringify(photos);
-      window.localStorage.setItem("photos", valeurPhotos);
-      genererPhotosModal(photos);
-    })
-    .catch(error => {
-      console.error('Error fetching photos:', error);
-    });
-} else {
-  photos = JSON.parse(photos);
-  genererPhotosModal(photos);
-}
-
+//Fonction pour afficher les photos dans la modal
 async function genererPhotosModal(photos) {
   const divGallery = document.querySelector(".galleryModal");
-  divGallery.innerHTML = ''; 
-  for await (let photo of photos) {
+  divGallery.innerHTML = '';
 
+  for (const photo of photos) {
     const article = photo;
 
     const photoElement = document.createElement("figure");
 
     let photoDelete = document.createElement("i");
     photoDelete.className = "fa-solid fa-trash-can js-delete";
-    photoDelete.addEventListener('click', function() {
-      const id = article.id; 
+    photoDelete.addEventListener('click', function () {
+      const id = article.id;
       if (confirm(`Êtes-vous sûr de vouloir supprimer le fichier ${id} ?`)) {
         deletePhoto(id);
       }
@@ -128,8 +106,44 @@ async function genererPhotosModal(photos) {
     photoElement.appendChild(photoDelete);
     photoElement.appendChild(imageElement);
     photoElement.appendChild(textElement);
+  }
 }
-}
+
+//Fonction pour changer l'affichage de la modal
+const showAddPhotoInterface = () => {
+  const galleryModal = document.querySelector('.galleryModal');
+  const addPhotoModal = document.querySelector('.addPhotoModal');
+  const modalTitle = document.querySelector('.js-modal-title');
+  const closeButton = document.querySelector('.js-close-modal');
+  const backButton = document.querySelector('.js-stop-modal');
+  fileInput = document.querySelector('.js-file-input');
+  titleInput = document.querySelector('.js-title-input');
+  const categorySelect = document.querySelector('.js-category-select');
+  addButton = document.querySelector('.js-add-button');
+
+  galleryModal.style.display = 'none';
+  addPhotoModal.style.display = 'flex';
+  modalTitle.textContent = 'Ajout photo';
+  fileInput.value = '';
+  titleInput.value = '';
+  categorySelect.value = '';
+  addButton.disabled = true;
+
+  closeButton.addEventListener('click', closeModal);
+  backButton.addEventListener('click', showGalleryInterface);
+  fileInput.addEventListener('change', handleFileInputChange);
+  titleInput.addEventListener('input', handleInputValidation);
+  categorySelect.addEventListener('change', handleInputValidation);
+  addButton.addEventListener('click', handleAddButtonClick);
+};
+
+const showGalleryInterface = () => {
+  const galleryModal = document.querySelector('.galleryModal');
+  const addPhotoModal = document.querySelector('.addPhotoModal');
+
+  galleryModal.style.display = 'block';
+  addPhotoModal.style.display = 'none';
+};
 
 //Fonction de suppresion
 function deletePhoto(id) {
@@ -147,6 +161,7 @@ function deletePhoto(id) {
     return true;
   })
   .then(data => {
+    photos = photos.filter(photo => photo.id !== id);
     const photoElement = document.querySelector(`[data-id="${id}"]`); 
     if (photoElement) {
       photoElement.remove(); 
@@ -158,51 +173,109 @@ function deletePhoto(id) {
 }
 
 
-//Fonction pour ajouter un fichier
-const addFile = (data) => {
-  fetch('http://localhost:5678/api/files', {
-    method: 'POST',
-    headers: {
-      'Content-Type': '',
-      'Authorization': `Bearer ${authToken}`
-    },
-    body: data
-  })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-    .then(data => {
-      // Afficher un message de confirmation d'ajout
-      console.log(`Le fichier ${data.id} a été ajouté`);
-    })
-    .catch(error => {
-      console.error('Error adding file:', error);
-    });
-};
+document.querySelectorAll('.js-modal').forEach(a => {
+  a.addEventListener('click', openModal);
+});
 
-// Ajouter un gestionnaire d'événements pour le bouton "Ajouter"
-modalElement.querySelector('.js-add-file').addEventListener('click', () => {
-  const fileInput = modalElement.querySelector('.js-file-input');
-  const file = fileInput.files[0];
-  if (file) {
-    const formData = new FormData();
-    formData.append('file', file);
-    addFile(formData);
-    closeModal();
+window.addEventListener('keydown', function(e) {
+  if (e.key === "Escape" || e.key === "Esc") {
+    closeModal(e)
+  }
+  if (e.key === "Tab" && modal !== null) {
+    focusInModal(e)
   }
 });
 
-// Ajouter le bouton "Ajouter" à votre modal
-const addButton = document.createElement('button');
-addButton.classList.add('js-add-file');
-addButton.textContent = 'Ajouter';
-modalElement.appendChild(addButton);
+let photos = [];
+let categories = window.localStorage.getItem("categories");
 
-// Ajouter un champ d'entrée de fichier à votre modal
-const fileInput = document.createElement('input');
-fileInput.type = 'file';
-fileInput.classList.add('js-file-input');
-modalElement.appendChild(fileInput);
+fetch('http://localhost:5678/api/works')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    photos = data;
+    genererPhotosModal(photos);
+  })
+  .catch(error => {
+    console.error('Error fetching photos:', error);
+  });
+
+// Ajouter le bouton "Ajouter une photo" à votre modal
+const btnAjout = document.querySelector('.btnAjout');
+modalElement = document.createElement('div');
+modalElement.classList.add('js-add');
+ 
+const changeButton = document.createElement('button');
+changeButton.classList.add('js-modal');
+changeButton.textContent = 'Ajouter une photo';
+
+modalElement.appendChild(changeButton);
+btnAjout.appendChild(modalElement);
+
+const handleFileInputChange = () => {
+  const fileInput = document.querySelector('.js-file-input');
+  addButton = document.querySelector('.js-add-button');
+  addButton.disabled = fileInput.files.length === 0;
+};
+
+const handleInputValidation = () => {
+  const titleInput = document.querySelector('.js-title-input');
+  const categorySelect = document.querySelector('.js-category-select');
+  addButton = document.querySelector('.js-add-button');
+  addButton.disabled = titleInput.value.trim() === '' || categorySelect.value === '';
+};
+
+const handleAddButtonClick = async () => {
+  const fileInput = document.querySelector('.js-file-input');
+  const titleInput = document.querySelector('.js-title-input');
+  const categorySelect = document.querySelector('.js-category-select');
+
+  const file = fileInput.files[0];
+  const title = titleInput.value;
+  const category = categorySelect.value;
+
+  if (file && title !== '' && category !== '') {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('title', title);
+    formData.append('category', category);
+
+    
+    const response = await fetch('http://localhost:5678/api/works', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${authToken}`
+      },
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      // Traitez la réponse de l'API ici
+      console.log(data);
+      // Réinitialisez les valeurs des champs après la réussite de la requête
+      fileInput.value = '';
+      titleInput.value = '';
+      categorySelect.value = '';
+      addButton.disabled = true;
+      // Affichez un message de réussite ou effectuez d'autres actions nécessaires
+      alert('Photo ajoutée avec succès!');
+    })
+    .catch(error => {
+      // Gérez les erreurs de la requête
+      console.error('Erreur lors de l\'ajout de la photo:', error);
+      // Affichez un message d'erreur ou effectuez d'autres actions nécessaires
+      alert('Une erreur est survenue lors de l\'ajout de la photo.');
+    });
+  };
+}
+// Gestionnaire d'événements
+/*
+fileInput.addEventListener('change', handleFileInputChange);
+titleInput.addEventListener('input', handleInputValidation);
+categorySelect.addEventListener('change', handleInputValidation);
+*/
+addButton.addEventListener('click', handleAddButtonClick);

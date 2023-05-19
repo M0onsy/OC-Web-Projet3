@@ -250,7 +250,7 @@ button {
 	padding: 8px 14px;
 }
 
-button:hover {
+.filtres button:hover {
 	color:white;
 	background-color:#1D6154;
 }
@@ -393,7 +393,7 @@ header .edit {
   }
   
 
-  .modal-wrapper {
+.modal-wrapper {
 	display: flex;
 	flex-wrap: wrap;
 	width: 650px;
@@ -464,24 +464,44 @@ header {
 	padding-top:260px;
 }
 
-.js-add-button {
-	display:flex;
-	justify-content: center;
-	align-items: center;
+.modal button {
+	background-color:#1D6154;
+	color:white;
 }
 
-.js-file-input {
+.btnInterface {
 	display:flex;
 	justify-content: center;
-	align-items: center;
 }
-
 .addPhotoModal {
-	display: none;
-}
-
-.js-modal {
-	display: flex;
+	display:none;
+	flex-direction: row;
+	flex-wrap: wrap;
 	justify-content: center;
 	align-items: center;
+	gap: 10px;
+}
+
+.js-modal-title {
+	display:flex;
+	justify-content: center;
+	width:100%;
+}
+
+.js-file {
+	display:flex;
+	justify-content: center;
+	width:100%;
+}
+
+.js-title {
+	display:flex;
+	justify-content: center;
+	width:100%;
+}
+
+.js-category {
+	display:flex;
+	justify-content: center;
+	width:100%;
 }

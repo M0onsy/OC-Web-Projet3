@@ -7,10 +7,13 @@ let focusables = [];
 let previouslyFocusedElement;
 let modalElement;
 let isAddingFile = false;
+const affichageInitial = document.querySelector('.modal-content');
+const addPhotoModal = document.querySelector('.addPhotoModal');
 
-let titleInput;
-let fileInput;
-let addButton;
+const fileInput = document.querySelector('.js-file-input');
+const titleInput = document.querySelector('.js-title-input');
+const categorySelect = document.querySelector('.js-category-select');
+const addButton = document.querySelector('.js-add-button');
 
 // Fonction pour ouvrir la modal
 const openModal = (e) => {
@@ -19,17 +22,14 @@ const openModal = (e) => {
   focusables = Array.from(modalElement.querySelectorAll(focusableSelector));
   previouslyFocusedElement = document.querySelector(':focus');
 
-  if (modalElement.classList.contains('js-add')) {
-    showAddPhotoInterface();
-  } else {
-    modalElement.style.display = null;
-    focusables[0].focus();
-    modalElement.removeAttribute('aria-hidden');
-    modalElement.setAttribute('aria-modal', 'true');
-    modalElement.addEventListener('click', closeModal);
-    modalElement.querySelector('.js-close-modal').addEventListener('click', closeModal);
-    modalElement.querySelector('.js-stop-modal').addEventListener('click', stopPropagation);
-  }
+  modalElement.style.display = null;
+  focusables[0].focus();
+  modalElement.removeAttribute('aria-hidden');
+  modalElement.setAttribute('aria-modal', 'true');
+  modalElement.addEventListener('click', closeModal);
+  modalElement.querySelector('.js-close-modal').addEventListener('click', closeModal);
+  modalElement.querySelector('.js-stop-modal').addEventListener('click', stopPropagation);
+  
 };
 
 
@@ -46,6 +46,11 @@ const closeModal = (e) => {
   modalElement.removeEventListener('click', closeModal);
   modalElement.querySelector('.js-close-modal').removeEventListener('click', closeModal);
   modalElement.querySelector('.js-stop-modal').removeEventListener('click', stopPropagation);
+
+  //Rétablir l'affichage initial de la modal
+  affichageInitial.style.display = 'block';
+  addPhotoModal.style.display = 'none';
+
   modalElement = null;
   modalElement = document.getElementById('modal1');
   modalElement.style.display = 'none';
@@ -109,42 +114,6 @@ async function genererPhotosModal(photos) {
   }
 }
 
-//Fonction pour changer l'affichage de la modal
-const showAddPhotoInterface = () => {
-  const galleryModal = document.querySelector('.galleryModal');
-  const addPhotoModal = document.querySelector('.addPhotoModal');
-  const modalTitle = document.querySelector('.js-modal-title');
-  const closeButton = document.querySelector('.js-close-modal');
-  const backButton = document.querySelector('.js-stop-modal');
-  fileInput = document.querySelector('.js-file-input');
-  titleInput = document.querySelector('.js-title-input');
-  const categorySelect = document.querySelector('.js-category-select');
-  addButton = document.querySelector('.js-add-button');
-
-  galleryModal.style.display = 'none';
-  addPhotoModal.style.display = 'flex';
-  modalTitle.textContent = 'Ajout photo';
-  fileInput.value = '';
-  titleInput.value = '';
-  categorySelect.value = '';
-  addButton.disabled = true;
-
-  closeButton.addEventListener('click', closeModal);
-  backButton.addEventListener('click', showGalleryInterface);
-  fileInput.addEventListener('change', handleFileInputChange);
-  titleInput.addEventListener('input', handleInputValidation);
-  categorySelect.addEventListener('change', handleInputValidation);
-  addButton.addEventListener('click', handleAddButtonClick);
-};
-
-const showGalleryInterface = () => {
-  const galleryModal = document.querySelector('.galleryModal');
-  const addPhotoModal = document.querySelector('.addPhotoModal');
-
-  galleryModal.style.display = 'block';
-  addPhotoModal.style.display = 'none';
-};
-
 //Fonction de suppresion
 function deletePhoto(id) {
   fetch(`http://localhost:5678/api/works/${id}`, {
@@ -172,6 +141,60 @@ function deletePhoto(id) {
   });
 }
 
+//Fonction d'ajout 
+async function addPhoto(data) {
+  let fileInput = document.querySelector('.js-file-input');
+  let titleInput = document.querySelector('.js-title-input');
+  let categorySelect = document.querySelector('.js-category-select');
+
+  let file = fileInput.files[0];
+  let title = titleInput.value;
+  let category = categorySelect.value;
+
+  if (!file || !title || !category) {
+    console.error('Veuillez remplir tous les champs.');
+    return;
+  }
+
+  let formData = new FormData();
+  formData.append('photo', file);
+  formData.append('title', title);
+  formData.append('category', category);
+
+  try {
+    let response = await fetch('http://localhost:5678/api/works', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${authToken}`
+      },
+      body: formData
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    console.log('Le fichier a été téléchargé avec succès.');
+    return true;
+  } catch (error) {
+    console.error('Une erreur est survenue lors du téléchargement du fichier:', error);
+    return false;
+  }
+}
+
+//Fonction de vérification des champs du formData
+function checkFields() {
+  if (fileInput.value && titleInput.value && categorySelect.value) {
+    addButton.removeAttribute('disabled');
+  } else {
+    addButton.setAttribute('disabled', 'true');
+  }
+}
+
+//Gestionnaire d'évènements sur les champs du formData
+fileInput.addEventListener('input', checkFields);
+titleInput.addEventListener('input', checkFields);
+categorySelect.addEventListener('input', checkFields);
 
 document.querySelectorAll('.js-modal').forEach(a => {
   a.addEventListener('click', openModal);
@@ -205,77 +228,23 @@ fetch('http://localhost:5678/api/works')
   });
 
 // Ajouter le bouton "Ajouter une photo" à votre modal
-const btnAjout = document.querySelector('.btnAjout');
+const btnInterface = document.querySelector('.btnInterface');
 modalElement = document.createElement('div');
 modalElement.classList.add('js-add');
  
 const changeButton = document.createElement('button');
-changeButton.classList.add('js-modal');
+changeButton.classList.add('js-add-interface');
 changeButton.textContent = 'Ajouter une photo';
 
 modalElement.appendChild(changeButton);
-btnAjout.appendChild(modalElement);
+btnInterface.appendChild(modalElement);
 
-const handleFileInputChange = () => {
-  const fileInput = document.querySelector('.js-file-input');
-  addButton = document.querySelector('.js-add-button');
-  addButton.disabled = fileInput.files.length === 0;
-};
+changeButton.addEventListener('click', function() {
+  affichageInitial.style.display = 'none';
+  addPhotoModal.style.display = 'flex';
+});
 
-const handleInputValidation = () => {
-  const titleInput = document.querySelector('.js-title-input');
-  const categorySelect = document.querySelector('.js-category-select');
-  addButton = document.querySelector('.js-add-button');
-  addButton.disabled = titleInput.value.trim() === '' || categorySelect.value === '';
-};
+const ajoutBtn = document.querySelector('.js-add-button');
+ajoutBtn.addEventListener('click', addPhoto);
 
-const handleAddButtonClick = async () => {
-  const fileInput = document.querySelector('.js-file-input');
-  const titleInput = document.querySelector('.js-title-input');
-  const categorySelect = document.querySelector('.js-category-select');
-
-  const file = fileInput.files[0];
-  const title = titleInput.value;
-  const category = categorySelect.value;
-
-  if (file && title !== '' && category !== '') {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('title', title);
-    formData.append('category', category);
-
-    
-    const response = await fetch('http://localhost:5678/api/works', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${authToken}`
-      },
-      body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-      // Traitez la réponse de l'API ici
-      console.log(data);
-      // Réinitialisez les valeurs des champs après la réussite de la requête
-      fileInput.value = '';
-      titleInput.value = '';
-      categorySelect.value = '';
-      addButton.disabled = true;
-      // Affichez un message de réussite ou effectuez d'autres actions nécessaires
-      alert('Photo ajoutée avec succès!');
-    })
-    .catch(error => {
-      // Gérez les erreurs de la requête
-      console.error('Erreur lors de l\'ajout de la photo:', error);
-      // Affichez un message d'erreur ou effectuez d'autres actions nécessaires
-      alert('Une erreur est survenue lors de l\'ajout de la photo.');
-    });
-  };
-}
-// Gestionnaire d'événements
-/*
-fileInput.addEventListener('change', handleFileInputChange);
-titleInput.addEventListener('input', handleInputValidation);
-categorySelect.addEventListener('change', handleInputValidation);
-*/
-addButton.addEventListener('click', handleAddButtonClick);
+console.log(ajoutBtn);

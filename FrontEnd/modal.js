@@ -133,7 +133,8 @@ function deletePhoto(id) {
     photos = photos.filter(photo => photo.id !== id);
     const photoElement = document.querySelector(`[data-id="${id}"]`); 
     if (photoElement) {
-      photoElement.remove(); 
+      photoElement.remove();
+      //genererPhotosModal(); 
     }
   })
   .catch(error => {
@@ -142,14 +143,19 @@ function deletePhoto(id) {
 }
 
 //Fonction d'ajout 
-async function addPhoto(data) {
+async function addPhoto() {
   let fileInput = document.querySelector('.js-file-input');
   let titleInput = document.querySelector('.js-title-input');
   let categorySelect = document.querySelector('.js-category-select');
 
+  
+
   let file = fileInput.files[0];
   let title = titleInput.value;
   let category = categorySelect.value;
+
+  
+  
 
   if (!file || !title || !category) {
     console.error('Veuillez remplir tous les champs.');
@@ -157,14 +163,17 @@ async function addPhoto(data) {
   }
 
   let formData = new FormData();
-  formData.append('photo', file);
   formData.append('title', title);
+  formData.append('image', file);
   formData.append('category', category);
+
+  console.log(formData);
 
   try {
     let response = await fetch('http://localhost:5678/api/works', {
       method: 'POST',
       headers: {
+        'Accept' : 'multipart/form-data',
         'Authorization': `Bearer ${authToken}`
       },
       body: formData

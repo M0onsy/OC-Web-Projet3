@@ -505,3 +505,9 @@ header {
 	justify-content: center;
 	width:100%;
 }
+
+.js-add-button:disabled {
+	color: #FFFFFF;
+	background-color: #A7A7A7;
+	border: 0px solid #A7A7A7;
+}

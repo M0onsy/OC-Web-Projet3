@@ -7,19 +7,15 @@ async function submit() {
   let emailInput = document.getElementById('email');
   let passwordInput = document.getElementById('password');
   let error = document.getElementById('errorActive');
+  let isError = false;
 
   let email = emailInput.value;
   let password = passwordInput.value;
 
-  if (!email && !password) {
-    error.innerHTML = "Veuillez remplir tous les champs.";
-    return;
-  }
-
   if (email && !validateEmail(email)) {
     error.innerHTML = "Veuillez saisir une adresse e-mail valide.";
     if (!password) {
-      error.innerHTML += " Veuillez saisir votre mot de passe.";
+      error.innerHTML += "Veuillez saisir votre mot de passe.";
     }
     return;
   }

@@ -390,6 +390,7 @@ header .edit {
 	width: 100%;
 	height: 100%; 
 	background: rgba(0, 0, 0, 0.3);
+	margin: 0;
   }
   
 
@@ -401,7 +402,7 @@ header .edit {
 	background-color: #ffffff;
 	border-radius: 10px;
 	margin: auto;
-	max-height: calc(100% - 60px); 
+	max-height: calc(100%); 
 	overflow-y: auto; 
   } 
   
@@ -420,16 +421,6 @@ header .edit {
 .galleryModal img {
 	width: 80px;
 	height: 110px;
-}
-
-.modal-wrapper .fa-xmark {
-	display:flex;
-	justify-content: flex-end;
-	width:100%;
-	height:30px;
-	padding-right:10px;
-	padding-top:10px;
-	padding-bottom:50px;
 }
 
 .modal-wrapper p {
@@ -510,4 +501,24 @@ header {
 	color: #FFFFFF;
 	background-color: #A7A7A7;
 	border: 0px solid #A7A7A7;
+}
+
+.js-add-button {
+	margin-bottom: 30px;
+}
+
+.js-add-interface {
+	margin-bottom: 30px;
+}
+
+.o2page {
+	width:100%;
+	display: flex;
+	justify-content: flex-end;
+	margin: 20px;
+}
+
+.js-back-modal {
+	position: relative;
+	right: 585px;
 }

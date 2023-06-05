@@ -423,7 +423,7 @@ header .edit {
 	height: 110px;
 }
 
-.modal-wrapper p {
+.modal-wrapper h3 {
 	display:flex;
 	justify-content: center;
 	width:100%;
@@ -462,39 +462,18 @@ header {
 
 .btnInterface {
 	display:flex;
+	flex-direction: column;
 	justify-content: center;
+	align-items: center;
 }
 .addPhotoModal {
+	width:100%;
 	display:none;
-	flex-direction: row;
+	flex-direction: column;
 	flex-wrap: wrap;
 	justify-content: center;
 	align-items: center;
 	gap: 10px;
-}
-
-.js-modal-title {
-	display:flex;
-	justify-content: center;
-	width:100%;
-}
-
-.js-file {
-	display:flex;
-	justify-content: center;
-	width:100%;
-}
-
-.js-title {
-	display:flex;
-	justify-content: center;
-	width:100%;
-}
-
-.js-category {
-	display:flex;
-	justify-content: center;
-	width:100%;
 }
 
 .js-add-button:disabled {
@@ -505,9 +484,11 @@ header {
 
 .js-add-button {
 	margin-bottom: 30px;
+	width: 240px;
 }
 
 .js-add-interface {
+	width: 240px;
 	margin-bottom: 30px;
 }
 
@@ -521,4 +502,18 @@ header {
 .js-back-modal {
 	position: relative;
 	right: 585px;
+}
+
+.supprGallerie {
+	font-size: 14px;
+	color:red;
+	margin-bottom:50px;
+}
+
+.addPhotoModal input {
+	width: 300px;
+}
+
+.addPhotoModal select {
+	width: 300px;
 }

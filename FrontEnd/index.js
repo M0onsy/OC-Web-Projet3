@@ -315,6 +315,9 @@ async function main() {
     const btnInterface = document.querySelector('.btnInterface');
     modalElement = document.createElement('div');
     modalElement.classList.add('js-add');
+    let modalElement2 = document.createElement('p');
+    modalElement2.textContent = 'Supprimer la gallerie';
+    modalElement2.classList.add('supprGallerie');
     
     const changeButton = document.createElement('button');
     changeButton.classList.add('js-add-interface');
@@ -322,6 +325,7 @@ async function main() {
 
     modalElement.appendChild(changeButton);
     btnInterface.appendChild(modalElement);
+    btnInterface.appendChild(modalElement2);
 
     changeButton.addEventListener('click', function() {
     affichageInitial.style.display = 'none';

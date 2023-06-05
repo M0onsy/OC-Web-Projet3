@@ -76,28 +76,34 @@
 			<div class="galleryModal"></div>
 			<div class="btnInterface"></div>
 		  	</div>
-		  	<div class="addPhotoModal">
-				<h2 class="js-modal-title">Ajout photo</h2>
-			<div class="js-file">
-			  <input type="file" class="js-file-input">
-			</div>
-			<div class="js-title">
-				<h4>Titre</h4>
-			  	<input type="text" class="js-title-input">
-			</div>
-			<div class="js-category">
-				<h4>Catégorie</h4>
-			  	<select class="js-category-select">
-					<option value=""></option>
-					<option value="1">Objets</option>
-					<option value="2">Appartements</option>
-					<option value="3">Hotels et restaurants</option>
-			  	</select>
-			</div>
-			<div>
-			  	<button class="js-add-button" disabled>Valider</button>
-			</div>
-		  	</div>
+			<form method="post" enctype="multipart/form-data">
+				<div class="addPhotoModal">
+					<h2 class="js-modal-title">Ajout photo</h2>
+				<div class="js-file">
+					<button class="uploadFile" for="image_uploads" disabled>+ Ajouter une photo</button>
+				  	<input type="file" class="js-file-input" id="image_uploads" name="image_uploads" accept=".jpg, .png, .jpeg">
+				</div>
+				<div class="preview">
+					<p>Pas de fichier sélectionner pour l'upload</p>
+				</div>
+				<div class="js-title">
+					<h4>Titre</h4>
+					  <input type="text" class="js-title-input">
+				</div>
+				<div class="js-category">
+					<h4>Catégorie</h4>
+					  <select class="js-category-select">
+						<option value=""></option>
+						<option value="1">Objets</option>
+						<option value="2">Appartements</option>
+						<option value="3">Hotels et restaurants</option>
+					  </select>
+				</div>
+				<div>
+					  <button class="js-add-button" disabled>Valider</button>
+				</div>
+				  </div>
+			</form>
 		</div>
 	</section>
 	  

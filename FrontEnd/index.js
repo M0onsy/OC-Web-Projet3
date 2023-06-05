@@ -17,7 +17,11 @@ async function main() {
     const categorySelect = document.querySelector('.js-category-select');
     const addButton = document.querySelector('.js-add-button');
     const modalEntete = document.querySelector('.o2page');
+    const preview = document.querySelector('.preview');
   
+
+    fileInput.style.opacity = 0;
+
     //Gestion modifications après connexion
     const logged0 = document.getElementById('edit0');
     const logged1 = document.getElementById('edit1');
@@ -275,6 +279,7 @@ async function main() {
     }
 
     //Gestionnaire d'évènements sur les champs du formData
+    fileInput.addEventListener('change', updateImageDisplay);
     fileInput.addEventListener('input', checkFields);
     titleInput.addEventListener('input', checkFields);
     categorySelect.addEventListener('input', checkFields);
@@ -344,6 +349,49 @@ async function main() {
         backButton.style.display = 'none';
     })
 
+    //Fonction pour prévisualiser l'image avant de l'upload
+    function updateImageDisplay() {
+        while(preview.firstChild) {
+          preview.removeChild(preview.firstChild);
+        }
+      
+        const curFiles = fileInput.files;
+        if (curFiles.length === 0) {
+          const para = document.createElement('p');
+          para.textContent = 'No files currently selected for upload';
+          preview.appendChild(para);
+        } else {
+          const list = document.createElement('ol');
+          preview.appendChild(list);
+      
+          for (const file of curFiles) {
+            const listItem = document.createElement('li');
+            const para = document.createElement('p');
+            if (validFileType(file)) {
+              const image = document.createElement('img');
+              image.src = URL.createObjectURL(file);
+      
+              listItem.appendChild(image);
+              listItem.appendChild(para);
+            } else {
+              para.textContent = `File name ${file.name}: Not a valid file type. Update your selection.`;
+              listItem.appendChild(para);
+            }
+      
+            list.appendChild(listItem);
+          }
+        }
+      }
+
+      const fileTypes = [
+        "image/jpeg",
+        "image/pjpeg",
+        "image/png",
+      ];
+
+      function validFileType(file) {
+        return fileTypes.includes(file.type);
+      }
   }
   
   main();

@@ -456,8 +456,7 @@ header {
 }
 
 .modal button {
-	background-color:#1D6154;
-	color:white;
+	
 }
 
 .btnInterface {
@@ -490,6 +489,8 @@ header {
 .js-add-interface {
 	width: 240px;
 	margin-bottom: 30px;
+	background-color:#1D6154;
+	color:white;
 }
 
 .o2page {
@@ -516,4 +517,31 @@ header {
 
 .addPhotoModal select {
 	width: 300px;
+}
+
+.preview img {
+	width:30%;
+}
+
+.fileInput {
+	
+}
+
+.preview li {
+	display:flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.uploadFile {
+	width: 10px;
+	color: #306685;
+	background-color: #CBD6DC;
+}
+
+.js-file {
+	display:flex;
+	justify-content: center;
+	width:100%;
+	background-color: #E8F1F7;
 }

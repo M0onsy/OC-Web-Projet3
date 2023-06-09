@@ -319,7 +319,7 @@ async function main() {
     // Ajouter le bouton "Ajouter une photo" à votre modal
     const btnInterface = document.querySelector('.btnInterface');
     modalElement = document.createElement('div');
-    modalElement.classList.add('js-add');
+    modalElement.classList.add('js-switch');
     let modalElement2 = document.createElement('p');
     modalElement2.textContent = 'Supprimer la gallerie';
     modalElement2.classList.add('supprGallerie');

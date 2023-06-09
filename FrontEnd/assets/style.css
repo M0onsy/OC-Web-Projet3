@@ -398,7 +398,7 @@ header .edit {
 	display: flex;
 	flex-wrap: wrap;
 	width: 650px;
-	height: auto;
+	height: 650px;
 	background-color: #ffffff;
 	border-radius: 10px;
 	margin: auto;
@@ -455,10 +455,6 @@ header {
 	padding-top:260px;
 }
 
-.modal button {
-	
-}
-
 .btnInterface {
 	display:flex;
 	flex-direction: column;
@@ -468,11 +464,26 @@ header {
 .addPhotoModal {
 	width:100%;
 	display:none;
-	flex-direction: column;
 	flex-wrap: wrap;
 	justify-content: center;
 	align-items: center;
-	gap: 10px;
+	gap: 30px;
+}
+
+.js-switch {
+	width: 50%;
+	display: flex;
+	justify-content: center;
+	padding-top: 30px;
+	border-top: 1px solid;
+}
+
+.js-add {
+	width: 55%;
+	display: flex;
+	justify-content: center;
+	padding-top: 30px;
+	border-top: 1px solid;
 }
 
 .js-add-button:disabled {
@@ -512,36 +523,56 @@ header {
 }
 
 .addPhotoModal input {
-	width: 300px;
+	height: 35px;
+	width: 360px;
+	border: 0px solid white ; 
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
 .addPhotoModal select {
-	width: 300px;
+	height:35px;
+	width: 360px;
+	border: 0px solid white ; 
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	margin-bottom: 20px;
 }
 
 .preview img {
-	width:30%;
-}
-
-.fileInput {
-	
-}
-
-.preview li {
-	display:flex;
-	justify-content: center;
-	align-items: center;
+	width:40%;
 }
 
 .uploadFile {
-	width: 10px;
+	width: 200px;
 	color: #306685;
 	background-color: #CBD6DC;
+	border-radius: 20px;
+	padding: 0;
+	border-color: #CBD6DC
 }
 
 .js-file {
 	display:flex;
+	flex-direction: column;
+	flex-wrap: wrap;
 	justify-content: center;
-	width:100%;
+	align-items: center;
+	width:60%;
+	height: auto;
 	background-color: #E8F1F7;
+	gap:20px;
+}
+
+.addPhotoModal h4 {
+	padding-bottom: 15px;
+}
+
+.js-modal-title {
+	width:100%;
+	display:flex;
+	justify-content: center;
+}
+
+.fa-image {
+	width: 100px;
+	color: #B9C5CC;
 }

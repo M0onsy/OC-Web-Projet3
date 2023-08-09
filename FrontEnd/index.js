@@ -12,12 +12,13 @@ async function main() {
     const affichageInitial = document.querySelector('.modal-content');
     const addPhotoModal = document.querySelector('.addPhotoModal');
     const backButton = document.querySelector('.js-back-modal');
-    const fileInput = document.querySelector('.js-file-input');
+    let fileInput = document.querySelector('.js-file-input');
     const titleInput = document.querySelector('.js-title-input');
     const categorySelect = document.querySelector('.js-category-select');
     const addButton = document.querySelector('.js-add-button');
     const modalEntete = document.querySelector('.o2page');
     const preview = document.querySelector('.preview');
+    let divGallery = document.querySelector(".galleryModal");
   
 
     fileInput.style.opacity = 0;
@@ -57,17 +58,23 @@ async function main() {
           const textElement = document.createElement("figcaption");
           textElement.innerText = `${article.title}`;
       
+          
+
           const photoElement = document.createElement("figure");
+          photoElement.setAttribute('data-id', article.id);
           photoElement.appendChild(imageElement);
           photoElement.appendChild(textElement);
       
           galleryContainer.appendChild(photoElement);
       
           // Ajouter chaque photo au tableau "photos"
-          photos.push({
-            url: article.imageUrl,
-            categoryId: article.categoryId
-          });
+          let index = photos.findIndex(e => e.categoryId === article.categoryId);
+          if (index == -1){
+            photos.push({
+              url: article.imageUrl,
+              categoryId: article.categoryId
+            });
+          } 
         }
       }
     }
@@ -165,11 +172,14 @@ async function main() {
 
     //Fonction pour afficher les photos dans la modal
     async function genererPhotosModal(photos) {
-        const divGallery = document.querySelector(".galleryModal");
-        divGallery.innerHTML = '';
+      const reponsePhotos = await fetch ('http://localhost:5678/api/works');
+      const articles = await reponsePhotos.json();
+
+      let divGallery = document.querySelector(".galleryModal");
+      divGallery.innerHTML = '';
   
-        for (const photo of photos) {
-            const article = photo;
+      for (const article of articles) {
+
   
             const photoElement = document.createElement("figure");
   
@@ -177,7 +187,7 @@ async function main() {
             photoDelete.className = "fa-solid fa-trash-can js-delete";
             photoDelete.addEventListener('click', function () {
                 const id = article.id;
-                if (confirm(`Êtes-vous sûr de vouloir supprimer le fichier ${id} ?`)) {
+                if (confirm(`Êtes-vous sûr de vouloir supprimer le fichier ?`)) {
                     deletePhoto(id);
                 }
             });
@@ -215,22 +225,28 @@ async function main() {
         })
         .then(data => {
         photos = photos.filter(photo => photo.id !== id);
-        const photoElement = document.querySelector(`[data-id="${id}"]`); 
+        const photoElement = document.querySelectorAll(`[data-id="${id}"]`); 
+        
+          
         if (photoElement) {
-            photoElement.remove();
+            photoElement.forEach(element => {
+              element.remove();
+            })
+            
         }
         })
         .catch(error => {
         console.log('Error deleting photo:', error);
         });
+        
     }
 
     //Fonction d'ajout 
     async function addPhoto() {
-        let fileInput = document.querySelector('.js-file-input');
         let titleInput = document.querySelector('.js-title-input');
         let categorySelect = document.querySelector('.js-category-select');
     
+         
         let file = fileInput.files[0];
         let title = titleInput.value;
         let category = categorySelect.value;
@@ -246,7 +262,7 @@ async function main() {
         formData.append('category', category);
     
         console.log(formData);
-    
+        
         try {
         let response = await fetch('http://localhost:5678/api/works', {
             method: 'POST',
@@ -256,12 +272,15 @@ async function main() {
             },
             body: formData
         });
+        
     
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
     
         console.log('Le fichier a été téléchargé avec succès.');
+        genererPhotos(photos, 0);
+        genererPhotosModal(photos);
         return true;
         } catch (error) {
         console.error('Une erreur est survenue lors du téléchargement du fichier:', error);
@@ -291,9 +310,6 @@ async function main() {
     window.addEventListener('keydown', function(e) {
     if (e.key === "Escape" || e.key === "Esc") {
         closeModal(e)
-    }
-    if (e.key === "Tab" && modal !== null) {
-        focusInModal(e)
     }
     });
 
@@ -340,13 +356,18 @@ async function main() {
     });
 
     const ajoutBtn = document.querySelector('.js-add-button');
-    ajoutBtn.addEventListener('click', addPhoto);
+    ajoutBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      addPhoto();
+      closeModal();
+    });
 
     //Gérez le click sur la flèche de retour 
     backButton.addEventListener('click', function() {
         affichageInitial.style.display = 'initial';
         addPhotoModal.style.display = 'none';
         backButton.style.display = 'none';
+        document.querySelector('.filePreview img').src = '';
     })
 
     //Fonction pour prévisualiser l'image avant de l'upload
@@ -366,6 +387,7 @@ async function main() {
       
           for (const file of curFiles) {
             const listItem = document.createElement('li');
+            listItem.classList.add('filePreview');
             const para = document.createElement('p');
             if (validFileType(file)) {
               const image = document.createElement('img');

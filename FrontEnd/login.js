@@ -1,4 +1,4 @@
-async function validateEmail(email) {
+function validateEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
@@ -12,7 +12,9 @@ async function submit() {
   let email = emailInput.value;
   let password = passwordInput.value;
 
+  console.log(validateEmail(email));
   if (email && !validateEmail(email)) {
+    console.log("email");
     error.innerHTML = "Veuillez saisir une adresse e-mail valide.";
     if (!password) {
       error.innerHTML += "Veuillez saisir votre mot de passe.";

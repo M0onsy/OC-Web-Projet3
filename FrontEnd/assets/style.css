@@ -519,12 +519,6 @@ header {
 	right: 585px;
 }
 
-.supprGallerie {
-	font-size: 14px;
-	color:red;
-	margin-bottom:50px;
-}
-
 .addPhotoModal input {
 	height: 35px;
 	width: 430px;

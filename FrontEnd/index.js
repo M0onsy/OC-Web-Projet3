@@ -20,6 +20,9 @@ async function main() {
     const preview = document.querySelector('.preview');
     let divGallery = document.querySelector(".galleryModal");
     let logoutButton = document.querySelector(".logout");
+    let initialFilePreviewContent;
+    let fileInterface = document.querySelector('.js-file');
+    const filePreviewContainer = document.querySelector('.preview');
 
     fileInput.style.opacity = 0;
 
@@ -193,16 +196,12 @@ async function main() {
             const imageElement = document.createElement("img");
             imageElement.src = article.imageUrl;
   
-            const textElement = document.createElement("figcaption");
-            textElement.innerText = `éditer`;
-  
             photoElement.setAttribute('data-id', article.id);
   
             divGallery.appendChild(photoElement);
   
             photoElement.appendChild(photoDelete);
             photoElement.appendChild(imageElement);
-            photoElement.appendChild(textElement);
         }
     }
 
@@ -353,16 +352,17 @@ async function main() {
     ajoutBtn.addEventListener('click', function(e) {
       e.preventDefault();
       addPhoto();
+      resetFileInput();
+      titleInput.value = '';
+      categorySelect.value = '';
+      affichageInitial.style.display = 'initial';
+      addPhotoModal.style.display = 'none';
+      backButton.style.display = 'none';
+      fileInterface.style.display = 'flex';
+      filePreviewContainer.style.display = 'none';
+      document.getElementById('imagePreview').src = '';
       closeModal();
     });
-
-    //Gérez le click sur la flèche de retour 
-    backButton.addEventListener('click', function() {
-        affichageInitial.style.display = 'initial';
-        addPhotoModal.style.display = 'none';
-        backButton.style.display = 'none';
-        document.querySelector('.filePreview img').src = '';
-    })
 
     //Fonction pour se déconnecter
     logoutButton.addEventListener('click', function() {
@@ -375,40 +375,37 @@ async function main() {
       login.style.display = "initial";
     })
 
-    //Fonction pour prévisualiser l'image avant de l'upload
-    function updateImageDisplay() {
-        while(preview.firstChild) {
-          preview.removeChild(preview.firstChild);
-        }
-      
-        const curFiles = fileInput.files;
-        if (curFiles.length === 0) {
-          const para = document.createElement('p');
-          para.textContent = 'No files currently selected for upload';
-          preview.appendChild(para);
-        } else {
-          const list = document.createElement('ol');
-          preview.appendChild(list);
-      
-          for (const file of curFiles) {
-            const listItem = document.createElement('li');
-            listItem.classList.add('filePreview');
-            const para = document.createElement('p');
+// Fonction pour prévisualiser l'image avant de l'upload
+function updateImageDisplay() {
+
+    filePreviewContainer.style.display = "flex";
+    fileInterface.style.display = "none";
+    const curFiles = fileInput.files;
+
+    if (curFiles.length > 0) {
+        // Créer un nouvel élément div pour la prévisualisation des fichiers
+        const previewDiv = document.querySelector('.preview');
+        
+        for (const file of curFiles) {
             if (validFileType(file)) {
-              const image = document.createElement('img');
-              image.src = URL.createObjectURL(file);
-      
-              listItem.appendChild(image);
-              listItem.appendChild(para);
+                const image = document.querySelector('.imgPreview');
+                image.id = 'imagePreview';
+                image.src = URL.createObjectURL(file);
+
+                previewDiv.appendChild(image);
             } else {
-              para.textContent = `File name ${file.name}: Not a valid file type. Update your selection.`;
-              listItem.appendChild(para);
+                para.textContent = `File name ${file.name}: Not a valid file type. Update your selection.`;
             }
-      
-            list.appendChild(listItem);
-          }
         }
-      }
+    }
+}
+
+// Fonction pour réinitialiser le champ de fichier
+function resetFileInput() {
+  fileInput.value = '';
+}
+
+
 
       const fileTypes = [
         "image/jpeg",
@@ -419,8 +416,23 @@ async function main() {
       function validFileType(file) {
         return fileTypes.includes(file.type);
       }
+
+      backButton.addEventListener('click', function () {
+        affichageInitial.style.display = 'initial';
+        addPhotoModal.style.display = 'none';
+        backButton.style.display = 'none';
+        fileInterface.style.display = 'flex';
+        filePreviewContainer.style.display = 'none';
+        document.getElementById('imagePreview').src = '';
+
+        // Réinitialiser le champ de fichier
+        resetFileInput();
+        // Réinitialiser les champs 'js-title' et 'js-category'
+        titleInput.value = '';
+        categorySelect.value = '';
+      });
+
   }
-  
   main();
   
 
